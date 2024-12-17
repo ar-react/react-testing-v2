@@ -1,0 +1,25 @@
+import { render, screen } from "@testing-library/react";
+import { User } from "../src/entities";
+import UserList from "../src/components/UserList";
+
+describe("UserAccount", () => {
+  it("should render no users if the array is empty", () => {
+    render(<UserList users={[]} />);
+    expect(screen.getByText(/no users/i)).toBeInTheDocument();
+  });
+
+  it("should render a list of users", () => {
+    const users: User[] = [
+      { id: 1, name: "Arup" },
+      { id: 2, name: "Gorai" },
+    ];
+
+    render(<UserList users={users} />);
+
+    users.forEach((user: User) => {
+      const link = screen.getByRole("link", { name: user.name });
+      expect(link).toBeInTheDocument();
+      expect(link).toHaveAttribute("href", `/users/${user.id}`);
+    });
+  });
+});
